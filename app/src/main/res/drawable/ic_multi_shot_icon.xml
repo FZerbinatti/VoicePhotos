@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1000dp"
+    android:height="1000dp"
+    android:viewportWidth="1000"
+    android:viewportHeight="1000">
+    <path
+        android:fillColor="#777"
+        android:name="Rettangolo 1"
+        android:pathData="m629 251h129v138h-129v-138z" />
+    <path
+        android:name="Rettangolo 1"
+        android:pathData="m748 261v118h-109v-118zm-119 -10v138h129v-138z"
+        android:fillColor="#000" />
+    <path
+        android:fillColor="#777"
+        android:name="Rettangolo 2"
+        android:pathData="m426 289h285v284h-285v-284z" />
+    <path
+        android:name="Rettangolo 2"
+        android:pathData="m701 299v264h-265v-264zm-275 -10v284h285v-284z"
+        android:fillColor="#000" />
+    <path
+        android:fillColor="#777"
+        android:name="Rettangolo 3"
+        android:pathData="m188 353h397v397h-397v-397z" />
+    <path
+        android:name="Rettangolo 3"
+        android:pathData="m575 363v377h-377v-377zm-387 -10v397h397v-397z"
+        android:fillColor="#000" />
+</vector>

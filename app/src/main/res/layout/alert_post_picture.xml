@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/button_grey_background"
+    android:padding="30dp">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:id="@+id/preview_immagine"
+        android:layout_height="300dp"
+        android:background="@drawable/button_white_background"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white_background"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_description"
+
+            android:padding="10dp"
+            android:maxLines="5"
+            android:textSize="15sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:hint="@string/desc"
+            />
+
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white_background"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_descrizione_immagine"
+            android:textSize="15sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:text="@string/push_the_mic_to_insert_a_description"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/microphone"
+        android:src="@drawable/ic_microphone"
+        android:background="@drawable/button_white_background"
+        android:padding="5dp"
+        />
+    </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white_background"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_descrizione_immagine1"
+            android:textSize="15sp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="20dp"
+            android:text="@string/tap_to_insert_location"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/microphone1"
+                android:src="@drawable/ic_location"
+                android:background="@drawable/button_white_background"
+                android:padding="12dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/annulla_dialog"
+                    android:paddingHorizontal="20dp"
+                    android:text="@string/cancel"
+                    android:background="@drawable/button_white_background"
+                    android:paddingVertical="10dp"
+                    android:textSize="18sp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:gravity="end">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/salva_immagine"
+                android:paddingHorizontal="20dp"
+                android:text="@string/save"
+                android:background="@drawable/button_white_background"
+                android:paddingVertical="10dp"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+
+
+
+
+        
+        
