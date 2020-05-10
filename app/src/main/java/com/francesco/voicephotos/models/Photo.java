@@ -1,6 +1,11 @@
 package com.francesco.voicephotos.models;
 
-public class Photo {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class Photo implements Serializable {
 
     private String photo_name;
     private String photo_path;
@@ -45,4 +50,6 @@ public class Photo {
     public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
+
+
 }

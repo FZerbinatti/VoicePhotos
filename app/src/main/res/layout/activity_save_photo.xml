@@ -28,21 +28,37 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
+            android:id="@+id/ll_single_photo"
             android:orientation="vertical"
             android:background="@drawable/button_white_background"
             android:layout_margin="5dp">
 
-
         <ImageView
             android:id="@+id/preview_immagine"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:visibility="gone"
+            android:layout_height="match_parent" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/ll_four_photo"
+            android:visibility="visible"
+            android:weightSum="10">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/savephotos_recyclerview"
+                android:scrollbars="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
         </LinearLayout>
 
     </LinearLayout>

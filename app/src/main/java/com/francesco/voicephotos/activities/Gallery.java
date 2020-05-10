@@ -90,11 +90,6 @@ public class Gallery extends AppCompatActivity {
                     }
                 }
                 if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
-                    // End has been reached
-
-                    Log.i("Yaeye!", "end called");
-
-                    // Do something
 
                     loading = true;
                 }

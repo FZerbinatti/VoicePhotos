@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //professionally create beautifully organized albums
     // take your photo, tell the description and have
 
-    private ImageView button_Capture, button_Gallery, button_Settings, button_multiple_shots;
+    private ImageView button_Capture, button_Gallery, button_Settings;
     private ImageButton end_session;
     private TextureView textureView;
     private String photo_name;
@@ -71,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     ProgressBar progress_loader;
     private SensorManager sensorManager;
     Sensor accelerometer;
-    private int rotation, mod;
+    private int rotation, list_size;
     private int orientation;
+    private LinearLayout ll_end_session;
 
     //Check state orientation of output image
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private HandlerThread mBackgroundThread;
     private static final String ACCELEROMETER_ROTATION = "1";
 
-    private ArrayList<String> multiple_shots;
+    private ArrayList<Photo> multiple_photo_shots;
 
     CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
@@ -130,17 +131,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         assert textureView != null;
        // enableRotation(getApplicationContext(), true);
         textureView.setSurfaceTextureListener(textureListener);
-        button_Capture = (ImageView) findViewById(R.id.btnCapture);
-        end_session = findViewById(R.id.button_multiple_shot_end_session);
-         multiple_shots = new ArrayList<String>();
-
+        button_Capture = (ImageView) findViewById(R.id.button_capture);
+        end_session = findViewById(R.id.button_end_session);
+        ll_end_session = findViewById(R.id.ll_end_session);
+        ll_end_session.setVisibility(View.INVISIBLE);
+        multiple_photo_shots = new ArrayList<Photo>();
         progress_loader = (ProgressBar) findViewById(R.id.progress_loader);
-        button_Capture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePicture(0);
-            }
-        });
+        orientation = 0;
+        directoryCreated = false;
+        list_size = 0;
+        initializeSeonsors();
+
+
+
         button_Gallery = (ImageView) findViewById(R.id.gallery);
         button_Gallery.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,41 +152,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
         button_Settings = (ImageView) findViewById(R.id.settings);
-        button_multiple_shots = findViewById(R.id.btnCaptureMultiple);
-        button_multiple_shots.setOnClickListener(new View.OnClickListener() {
+        button_Capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                button_Capture.setVisibility(View.GONE);
-                end_session.setVisibility(View.VISIBLE);
-
-                takePicture(1);
-
-                // scatta tutte le foto che vuoi
-
-
-                end_session.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        button_Capture.setVisibility(View.VISIBLE);
-                        end_session.setVisibility(View.GONE);
-                        Intent intent = new Intent(MainActivity.this, SavePhoto.class);
-                        intent.putExtra("PHOTO_MOD", "1");
-                        intent.putStringArrayListExtra("LIST_PHOTO_NAMES", multiple_shots);
-
-                    }
-                });
+                ll_end_session.setVisibility(View.VISIBLE);
+                takePicture();
             }
         });
 
-        orientation = 0;
+        end_session.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SavePhoto.class);
+                intent.putExtra("LIST_OF_PHOTOS",multiple_photo_shots);
+                Toast.makeText(MainActivity.this, R.string.elab_ph, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: sending multiple_shots.size()"+ multiple_photo_shots.size());
+                startActivity(intent);
+                finish();
+
+            }
+        });
 
 
-        directoryCreated = false;
-        initializeSeonsors();
+
+
+
     }
 
     private void initializeSeonsors() {
-        rotation =0;
+        rotation = 0;
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(MainActivity.this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -198,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    private void takePicture(final int mod) {
+    private void takePicture() {
         if(cameraDevice == null)
             return;
         CameraManager manager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
@@ -293,30 +290,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     // passa come intent l'URI della foto salvata
                     // carica la foto nella pagina successiva
 
-                    if (mod ==0 ){
-                        Intent intent = new Intent(MainActivity.this, SavePhoto.class);
-
-                        intent.putExtra("PHOTO_MOD", "0");
-                        intent.putExtra("PHOTO_PATH", file.toString());
-                        intent.putExtra("PHOTO_NAME", photo_name.toString());
-                        intent.putExtra("PHOTO_ORIENTATION", String.valueOf(orientation));
-
-                        Log.d(TAG, "onCaptureCompleted: IMAGE_PATH PASSING: " + file);
-                        Log.d(TAG, "onCaptureCompleted: intent:" +intent);
-                        Toast.makeText(MainActivity.this, R.string.elab_ph, Toast.LENGTH_SHORT).show();
-                        startActivity(intent);
-                    }else if (mod ==1){
-
-                        Log.d(TAG, "onCaptureCompleted: mod = 1 ");
-                        // passo una lista di stringhe con i nomi delle foto scattate in questa sessione
+                    multiple_photo_shots.add(new Photo(photo_name, file.toString(),"",String.valueOf(orientation)));
+                    list_size = multiple_photo_shots.size();
+                    Log.d(TAG, "onCaptureCompleted: LIST OF PHOTOS SIZE ======== "+ list_size);
+                    createCameraPreview();
 
 
-                        multiple_shots.add(photo_name);
-
-
-                        takePicture(1);
-
-                    }
 
                 }
             };
@@ -325,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     try{
-                        cameraCaptureSession.capture(captureBuilder.build(),captureListener,mBackgroundHandler);
+                        cameraCaptureSession.capture(captureBuilder.build(),captureListener, mBackgroundHandler);
 
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
@@ -336,7 +315,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
 
                 }
-            },mBackgroundHandler);
+            }, mBackgroundHandler);
 
 
         } catch (CameraAccessException e) {
@@ -469,6 +448,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
+        ll_end_session.setVisibility(View.INVISIBLE);
         startBackgroundThread();
         if(textureView.isAvailable())
             openCamera();
@@ -501,14 +481,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d(TAG, "X:" +event.values[0] + " Y:"  +event.values[1] + " Z:"+event.values[2]);
+
+        //Log.d(TAG, "X:" +event.values[0] + " Y:"  +event.values[1] + " Z:"+event.values[2]);
         //quando la X è maggiore di 6 o minore di -6 allora ruota le icone di 90, quando è minore di 6 allora torna a ruotare
         Long duration = 100L;
         Float rotationCW = -90f;
         Float rotationACW = 90f;
         if (event.values[0]>8){
 
-            button_multiple_shots.animate().rotation(rotationACW).setDuration(duration).start();
+            end_session.animate().rotation(rotationACW).setDuration(duration).start();
             button_Capture.animate().rotation(rotationACW).setDuration(duration).start();
             button_Gallery.animate().rotation(rotationACW).setDuration(duration).start();
             button_Settings.animate().rotation(rotationACW).setDuration(duration).start();
@@ -516,7 +497,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }else if(event.values[0]<-8){
 
-            button_multiple_shots.animate().rotation(rotationCW).setDuration(duration).start();
+            end_session.animate().rotation(rotationCW).setDuration(duration).start();
             button_Capture.animate().rotation(rotationCW).setDuration(duration).start();
             button_Gallery.animate().rotation(rotationCW).setDuration(duration).start();
             button_Settings.animate().rotation(rotationCW).setDuration(duration).start();
@@ -524,7 +505,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         }else{
-            button_multiple_shots.animate().rotation(0).setDuration(duration).start();
+            end_session.animate().rotation(0).setDuration(duration).start();
             button_Capture.animate().rotation(0).setDuration(duration).start();
             button_Gallery.animate().rotation(0).setDuration(duration).start();
             button_Settings.animate().rotation(0).setDuration(duration).start();
