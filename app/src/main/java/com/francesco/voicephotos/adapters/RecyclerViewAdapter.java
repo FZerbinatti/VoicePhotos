@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,8 @@ import com.francesco.voicephotos.models.Photo;
 
 import java.io.File;
 import java.util.List;
+
+import static com.google.android.gms.plus.PlusOneDummyView.TAG;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter <RecyclerViewAdapter.ViewHolder> {
 
@@ -57,7 +60,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter <RecyclerViewAdapt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
+        Log.d(TAG, "onBindViewHolder: Test: photo size: "+ photos.size());
+        Log.d(TAG, "onBindViewHolder: photos number: "+i + "details: "+ viewHolder.photo_preview_text.getText() + " - " +(photos.get(i).getPhoto_description()));
         viewHolder.photo_preview_text.setText(photos.get(i).getPhoto_description());
+
         File imgFile = new File (photos.get(i).getPhoto_path());
 
 

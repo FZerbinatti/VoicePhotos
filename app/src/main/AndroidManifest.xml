@@ -14,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".activities.Photo_detail"></activity>
+        <activity
+            android:name=".OpenPhotoActivity"
+            android:exported="false" />
+        <activity android:name=".activities.Photo_detail" />
         <activity android:name=".activities.FullScreenActivity" />
         <activity android:name=".activities.Gallery" />
         <activity

@@ -92,25 +92,41 @@
                 </LinearLayout>
             </LinearLayout>
 
+
             <LinearLayout
-                android:id="@+id/linearLayout4"
+                android:id="@+id/fullscreen_content_controls2"
+                style="?metaButtonBarStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom|start"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/button_trasp_background"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_opaque_background"
+                android:backgroundTint="@color/opaque_white"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="UselessParent">
 
-                <ImageButton
-                    android:id="@+id/settings"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:background="@color/transparent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_settings_black"
-                    android:text="@string/dummy_button" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/settings"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@color/transparent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_settings_black"
+                        android:text="@string/dummy_button" />
+                </LinearLayout>
+
             </LinearLayout>
+
+
 
 
             <LinearLayout
@@ -135,8 +151,8 @@
 
                     <ImageButton
                         android:id="@+id/gallery"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:background="@color/transparent"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_gallery"

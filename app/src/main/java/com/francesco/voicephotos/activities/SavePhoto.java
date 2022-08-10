@@ -84,7 +84,8 @@ public class SavePhoto extends AppCompatActivity {
 
         orientation = 0;
         Intent intent = getIntent();
-        ArrayList<Photo> list_of_photos = (ArrayList<Photo>)intent.getSerializableExtra("LIST_OF_PHOTOS");
+        final ArrayList<Photo> list_of_photos = (ArrayList<Photo>)intent.getSerializableExtra("LIST_OF_PHOTOS");
+        Log.d(TAG, "onCreate: size arrived: "+list_of_photos.size());
         Bundle extras = getIntent().getExtras();
         int list_size =list_of_photos.size();
         Log.d(TAG, "onCreate: RECIEVED LIST_SIZE: " + list_size );
@@ -103,11 +104,34 @@ public class SavePhoto extends AppCompatActivity {
             Log.d(TAG, "onCreate: PHOTO PATH: " + photo_path);
             Glide.with(getApplicationContext()).load(imgFile.getAbsolutePath()).apply(new RequestOptions().centerInside()).into(preview_immagine);
             preview_immagine.setRotation(orientation);
+
+            //salvataggio foto singola
+            button_save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.d(TAG, "onClick: salvataggio foto singola");
+                    // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
+
+                    Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
+                    mDatabaseHelper.addPhotoObject(photo);
+
+                    Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                    Intent intent = new Intent(SavePhoto.this, MainActivity.class);
+                    startActivity(intent);
+
+
+                }
+            });
         }else{
 
             preview_immagine.setVisibility(View.GONE);
             four_photo.setVisibility(View.VISIBLE);
             recyclerViewSavePhotos = findViewById(R.id.savephotos_recyclerview);
+
+
 
             final GridLayoutManager mLayoutManager;
             mLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
@@ -117,26 +141,41 @@ public class SavePhoto extends AppCompatActivity {
             recyclerViewSavePhotos.setLayoutManager(new GridLayoutManager(this,2));
             recyclerViewSavePhotos.setAdapter(adapter);
 
+            //salvataggio foto multiple
+            button_save.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
+
+
+                    for (int j=0; j<list_of_photos.size(); j++){
+
+                        photo_path = list_of_photos.get(j).getPhoto_path();
+                        photo_name = list_of_photos.get(j).getPhoto_name();
+                        photo_orientation = list_of_photos.get(j).getOrientation();
+                        orientation = Integer.parseInt(photo_orientation);
+
+
+                        Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
+                        mDatabaseHelper.addPhotoObject(photo);
+                    }
+
+
+
+                    Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                    Intent intent = new Intent(SavePhoto.this, MainActivity.class);
+                    startActivity(intent);
+
+
+                }
+            });
+
         }
 
 
-        button_save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
 
-                Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
-                mDatabaseHelper.addPhotoObject(photo);
-
-                Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
-                finish();
-
-                Intent intent = new Intent(SavePhoto.this, MainActivity.class);
-                startActivity(intent);
-
-
-            }
-        });
 
         button_cancel.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -43,7 +43,7 @@ public class FullSizeAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         inflater =  (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view =  inflater.inflate(R.layout.activity_full_screen,null);
+        View view =  inflater.inflate(R.layout.full_item,null);
         ImageView imageView = (ImageView)view.findViewById(R.id.full_item_image);
         Glide.with(context).load(images_paths.get(position)).apply(new RequestOptions().centerInside()).into(imageView);
 

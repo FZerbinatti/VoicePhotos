@@ -44,21 +44,23 @@ public class Gallery extends AppCompatActivity {
         Log.d(TAG, "onCreate: Photos list size:" + photoList.size());
 
         final GridLayoutManager mLayoutManager;
-        mLayoutManager = new GridLayoutManager(getApplicationContext(), 8);
+        mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
 
         final RecyclerViewClickListener listener = new RecyclerViewClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ArrayList<String> images_paths = null;
+                ArrayList<String> images_paths = new ArrayList<>();
                 // open the Full screen image display
                 Intent intent = new Intent(Gallery.this, FullScreenActivity.class);
                 // passa solamente una lista dei path delle immagini
                 for (int i=0; i<photoList.size(); i++){
                     images_paths.add(photoList.get(i).getPhoto_path());
+                    Log.d(TAG, "onClick: path: "+photoList.get(i).getPhoto_path());
                 }
 
                 intent.putExtra("PHOTOS_PATHS", images_paths) ;
+                Log.d(TAG, "onClick: position passed: "+position);
                 intent.putExtra("PHOTO_POSITION", position);
                 startActivity(intent);
 
@@ -76,12 +78,14 @@ public class Gallery extends AppCompatActivity {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
                 visibleItemCount = recyclerView.getChildCount();
                 totalItemCount = mLayoutManager.getItemCount();
-                firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-                Log.d(TAG, "onScrolled: totalItemCount" +totalItemCount);
-                Log.d(TAG, "onScrolled: visibleItemCount"+visibleItemCount);
+
+
                 Log.d(TAG, "onScrolled: firstVisibleItem"+firstVisibleItem);
+                Log.d(TAG, "onScrolled: visibleItemCount"+visibleItemCount);
+                Log.d(TAG, "onScrolled: totalItemCount" +totalItemCount);
 
                 if (loading) {
                     if (totalItemCount > previousTotal) {

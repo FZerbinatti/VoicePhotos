@@ -5,6 +5,7 @@ import androidx.viewpager.widget.ViewPager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.francesco.voicephotos.R;
 import com.francesco.voicephotos.adapters.FullSizeAdapter;
@@ -15,7 +16,8 @@ public class FullScreenActivity extends Activity {
 
     ViewPager viewPager;
     ArrayList<String> images_paths;
-    int position;
+    Integer position;
+    private static String TAG ="FullScreenActivity: ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,10 @@ public class FullScreenActivity extends Activity {
         if (savedInstanceState==null){
             Intent intent = getIntent();
             images_paths = intent.getStringArrayListExtra("PHOTOS_PATHS");
-            position = Integer.parseInt(intent.getStringExtra("PHOTO_POSITION"));
+            Log.d(TAG, "onCreate: -"+intent.getIntExtra("PHOTO_POSITION", 0));
+
+            position = intent.getIntExtra("PHOTO_POSITION", 0);
+            Log.d(TAG, "onCreate: int position: "+position);
         }
 
         FullSizeAdapter fullsizeadapter = new FullSizeAdapter(this, images_paths);
