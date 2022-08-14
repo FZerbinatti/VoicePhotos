@@ -12,6 +12,10 @@ public class Photo implements Serializable {
     private String photo_description;
     private String orientation;
 
+    public Photo() {
+
+    }
+
     public Photo(String photo_name, String photo_path, String photo_description, String orientation) {
         this.photo_name = photo_name;
         this.photo_path = photo_path;

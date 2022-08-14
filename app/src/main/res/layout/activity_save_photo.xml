@@ -31,7 +31,6 @@
             android:layout_height="300dp"
             android:id="@+id/ll_single_photo"
             android:orientation="vertical"
-            android:background="@drawable/button_white_background"
             android:layout_margin="5dp">
 
         <ImageView
@@ -152,6 +151,7 @@
                     android:background="@drawable/button_white_background"
                     android:paddingHorizontal="20dp"
                     android:text="@string/cancel"
+                    android:padding="10dp"
                     android:textSize="14sp" />
             </RelativeLayout>
         </LinearLayout>
@@ -167,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/salva_immagine"
                 android:paddingHorizontal="20dp"
+                android:padding="10dp"
                 android:text="@string/save"
                 android:background="@drawable/button_white_background"
                 android:textSize="14sp"/>

@@ -3,7 +3,9 @@ package com.francesco.voicephotos.activities;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +35,8 @@ public class FullScreenActivity extends Activity {
     DatabaseHelper mDatabaseHelper;
     FullSizeAdapter fullsizeadapter;
     Context context;
+    String string_photo_date;
+    String string_photo_description;
 
     @Override
     public void onBackPressed() {
@@ -48,6 +52,9 @@ public class FullScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_screen);
 
+        photo_date = findViewById(R.id.photo_date);
+        photo_description = findViewById(R.id.photo_description);
+
         context=this;
 
         mDatabaseHelper = new DatabaseHelper(getApplicationContext());
@@ -56,10 +63,8 @@ public class FullScreenActivity extends Activity {
         if (savedInstanceState==null){
             Intent intent = getIntent();
             images_paths = intent.getStringArrayListExtra("PHOTOS_PATHS");
-            Log.d(TAG, "onCreate: -"+intent.getIntExtra("PHOTO_POSITION", 0));
-
             position = intent.getIntExtra("PHOTO_POSITION", 0);
-            Log.d(TAG, "onCreate: int position: "+position);
+
         }
 
         fullsizeadapter = new FullSizeAdapter(this, images_paths);
@@ -79,31 +84,51 @@ public class FullScreenActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                //remove from SQL
-                String photo_path = images_paths.get(position);
-                mDatabaseHelper.removePhotoFromSqlite(photo_path);
 
-                //remove actual file
-                File fdelete = new File(photo_path);
-                if (fdelete.exists()) {
-                    if (fdelete.delete()) {
-                        System.out.println("file Deleted :" + photo_path);
-                    } else {
-                        System.out.println("file not Deleted :" + photo_path);
-                    }
-                }
+                new AlertDialog.Builder(context)
+                        .setTitle("Elimina Foto")
+                        .setMessage("Sei sicuro di voler eliminare questa foto, o ti è scivolato il dito, babbo?")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Continue with delete operation
+                                //remove from SQL
+                                String photo_path = images_paths.get(position);
+                                mDatabaseHelper.removePhotoFromSqlite(photo_path);
+
+                                //remove actual file
+                                File fdelete = new File(photo_path);
+                                if (fdelete.exists()) {
+                                    if (fdelete.delete()) {
+                                        System.out.println("file Deleted :" + photo_path);
+                                    } else {
+                                        System.out.println("file not Deleted :" + photo_path);
+                                    }
+                                }
 
 
-                Toast.makeText(FullScreenActivity.this, "Photo Removed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(FullScreenActivity.this, "Foto Eliminata!", Toast.LENGTH_SHORT).show();
 
-                images_paths.remove(photo_path);
-                fullsizeadapter.notifyDataSetChanged();
-                viewPager.setAdapter(fullsizeadapter);
-                viewPager.setCurrentItem(position-1, true);
+                                images_paths.remove(photo_path);
+                                fullsizeadapter.notifyDataSetChanged();
+                                viewPager.setAdapter(fullsizeadapter);
+                                viewPager.setCurrentItem(position-1, true);
 
 
-                /*Intent intent = new Intent(FullScreenActivity.this, FullScreenActivity.class);
-                startActivity(intent);*/
+
+                            }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_delete)
+                        .show();
+
+
+
+
             }
         });
 

@@ -1,22 +1,27 @@
 package com.francesco.voicephotos.activities;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.francesco.voicephotos.Interfaces.RecyclerViewClickListener;
 import com.francesco.voicephotos.R;
 import com.francesco.voicephotos.adapters.RecyclerViewAdapter;
@@ -25,6 +30,7 @@ import com.francesco.voicephotos.models.Photo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class Gallery extends AppCompatActivity {
 
@@ -36,8 +42,11 @@ public class Gallery extends AppCompatActivity {
     private int visibleThreshold = 8;
     int firstVisibleItem, visibleItemCount, totalItemCount;
     List <Photo> photoList;
-
+    private static final int REQUEST_CODE_SPEACH_INPUT = 1000;
+    ImageButton button_microphone;
+    TextView secret_textview;
     SearchView searchview;
+    Context context;
 
 
     @Override
@@ -50,10 +59,19 @@ public class Gallery extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(getApplicationContext());
         photoList = mDatabaseHelper.getPhotos();
         Log.d(TAG, "onCreate: Photos list size:" + photoList.size());
-
+        button_microphone = findViewById(R.id.button_microphone);
+        secret_textview = findViewById(R.id.secret_textview);
         final GridLayoutManager mLayoutManager;
         mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
+        context=this;
+
+        button_microphone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Voice2Text();
+            }
+        });
 
         searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -139,11 +157,12 @@ public class Gallery extends AppCompatActivity {
                     images_paths.add(photoList.get(i).getPhoto_path());
                     Log.d(TAG, "onClick: path: "+photoList.get(i).getPhoto_path());
                 }
-
                 intent.putExtra("PHOTOS_PATHS", images_paths) ;
-                Log.d(TAG, "onClick: position passed: "+position);
                 intent.putExtra("PHOTO_POSITION", position);
+
                 startActivity(intent);
+                Animatoo.animateSlideLeft(context);
+                finish();
 
 
             }
@@ -186,22 +205,45 @@ public class Gallery extends AppCompatActivity {
 
     }
 
-    public boolean onQueryTextChange(String newText) {
-        Log.d(TAG, "onQueryTextChange: text== "+newText);
-        if (TextUtils.isEmpty(newText)) {
-            //mListView.clearTextFilter();
-        } else {
-            //mListView.setFilterText(newText.toString());
-        }
-        return true;
-    }
 
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
 
     private void hideSoftKeyboard() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+    }
+
+    public void Voice2Text (){
+
+        Intent intent_voice = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent_voice.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent_voice.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent_voice.putExtra(RecognizerIntent.EXTRA_PROMPT, "Cosa cerco?");
+
+
+        try {
+            startActivityForResult(intent_voice, REQUEST_CODE_SPEACH_INPUT);
+        }catch (Exception e){
+            Log.d(TAG, "onClick: "+ e.getMessage());
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case REQUEST_CODE_SPEACH_INPUT:{
+                if (resultCode == RESULT_OK && data != null ) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                    //secret_textview.setText(result.get(0));
+                    //onQueryTextSubmit(result.get(0));
+
+
+
+                }
+            }
+        }
     }
 }
