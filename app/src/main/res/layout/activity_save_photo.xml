@@ -84,6 +84,7 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             android:textSize="14sp"
             android:layout_gravity="center_horizontal"
+            android:imeOptions="flagNoEnterAction"
             android:hint="Tap mic or here to insert a description"
             />
 

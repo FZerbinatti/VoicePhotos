@@ -93,7 +93,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void removePhotoFromSqlite(String photo_path) {
 
+        Log.d(TAG, "removePhotoFromSqlite: ");
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String whereClause = "PHOTO_PATH"+"=?";
+        String[] whereArgs = new String[] { photo_path};
+        db.delete(TABLE_PHOTOS, whereClause, whereArgs);
+
+        Log.d(TAG, "removePhotoFromSqlite: Removed.");
+
+    }
+
+    public ArrayList<Photo> searchPhoto(String search_input){
+
+        Log.d(TAG, "searchPhoto: query in: "+search_input);
+
+        ArrayList<Photo> photos = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Integer count = 0;
+
+        //String selectQuery = "SELECT PHOTO_NAME, PHOTO_PATH, PHOTO_DESCRIPTION, PHOTO_ORIENTATION  FROM "+ TABLE_PHOTOS +" WHERE "+ "PHOTO_DESCRIPTION LIKE '%g%' ";
+
+
+        String selectQuery = "SELECT PHOTO_NAME, PHOTO_PATH, PHOTO_DESCRIPTION, PHOTO_ORIENTATION  FROM "+ TABLE_PHOTOS +" WHERE "+ "PHOTO_DESCRIPTION LIKE '%"+ search_input  +"%'";
+
+
+
+        //Cursor cursor = db.rawQuery(selectQuery, new String[]{search_input});
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        Log.d(TAG, "searchPhoto: "+cursor);
+        if (cursor.moveToFirst()) {
+            do {
+                photos.add(new Photo(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getString(3)));
+                Log.d(TAG, "searchPhoto: found item: name:" +cursor.getString(0 ) + " - description: "+ cursor.getString(2));
+            } while (cursor.moveToNext());
+        }
+
+
+        cursor.close();
+        db.close();
+        Log.d(TAG, "searchPhoto: size: " +photos.size());
+
+        return photos;
+
+    }
 
 
 

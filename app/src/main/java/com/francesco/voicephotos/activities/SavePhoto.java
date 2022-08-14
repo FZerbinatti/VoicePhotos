@@ -1,5 +1,6 @@
 package com.francesco.voicephotos.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Criteria;
@@ -8,8 +9,10 @@ import android.location.LocationManager;
 import android.speech.RecognizerIntent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.francesco.voicephotos.adapters.GridViewAdapter;
@@ -61,7 +65,7 @@ public class SavePhoto extends AppCompatActivity {
     int photo_numeber;
     RecyclerView recyclerViewSavePhotos;
     ArrayList<Photo> list_of_photos;
-
+    Context context;
 
 
 
@@ -71,6 +75,7 @@ public class SavePhoto extends AppCompatActivity {
         setContentView(R.layout.activity_save_photo);
 
         hideSoftKeyboard();
+        context = this;
 
         //dichiarazione
         button_save = (Button) findViewById(R.id.salva_immagine);
@@ -92,6 +97,8 @@ public class SavePhoto extends AppCompatActivity {
 
 
 
+
+
         if (list_size == 1){
             preview_immagine.setVisibility(View.VISIBLE);
             four_photo.setVisibility(View.GONE);
@@ -105,22 +112,13 @@ public class SavePhoto extends AppCompatActivity {
             Glide.with(getApplicationContext()).load(imgFile.getAbsolutePath()).apply(new RequestOptions().centerInside()).into(preview_immagine);
             preview_immagine.setRotation(orientation);
 
+
             //salvataggio foto singola
             button_save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Log.d(TAG, "onClick: salvataggio foto singola");
-                    // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
-
-                    Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
-                    mDatabaseHelper.addPhotoObject(photo);
-
-                    Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
-                    finish();
-
-                    Intent intent = new Intent(SavePhoto.this, MainActivity.class);
-                    startActivity(intent);
+                    saveSinglePhoto();
 
 
                 }
@@ -130,8 +128,6 @@ public class SavePhoto extends AppCompatActivity {
             preview_immagine.setVisibility(View.GONE);
             four_photo.setVisibility(View.VISIBLE);
             recyclerViewSavePhotos = findViewById(R.id.savephotos_recyclerview);
-
-
 
             final GridLayoutManager mLayoutManager;
             mLayoutManager = new GridLayoutManager(getApplicationContext(), 4);
@@ -146,32 +142,9 @@ public class SavePhoto extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
-
-
-                    for (int j=0; j<list_of_photos.size(); j++){
-
-                        photo_path = list_of_photos.get(j).getPhoto_path();
-                        photo_name = list_of_photos.get(j).getPhoto_name();
-                        photo_orientation = list_of_photos.get(j).getOrientation();
-                        orientation = Integer.parseInt(photo_orientation);
-
-
-                        Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
-                        mDatabaseHelper.addPhotoObject(photo);
-                    }
-
-
-
-                    Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
-                    finish();
-
-                    Intent intent = new Intent(SavePhoto.this, MainActivity.class);
-                    startActivity(intent);
-
-
+                    saveMultiplePhoto();
                 }
             });
-
         }
 
 
@@ -253,6 +226,43 @@ public class SavePhoto extends AppCompatActivity {
         });
 
 
+    }
+
+    public void saveSinglePhoto(){
+        Log.d(TAG, "onClick: salvataggio foto singola");
+        // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
+
+        Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
+        mDatabaseHelper.addPhotoObject(photo);
+
+        Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
+        finish();
+
+        Intent intent = new Intent(SavePhoto.this, MainActivity.class);
+        startActivity(intent);
+        Animatoo.animateZoom(context);
+    }
+
+    public void saveMultiplePhoto(){
+        for (int j=0; j<list_of_photos.size(); j++){
+
+            photo_path = list_of_photos.get(j).getPhoto_path();
+            photo_name = list_of_photos.get(j).getPhoto_name();
+            photo_orientation = list_of_photos.get(j).getOrientation();
+            orientation = Integer.parseInt(photo_orientation);
+
+
+            Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
+            mDatabaseHelper.addPhotoObject(photo);
+        }
+
+
+
+        Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
+        finish();
+
+        Intent intent = new Intent(SavePhoto.this, MainActivity.class);
+        startActivity(intent);
     }
 
     public void Voice2Text (){

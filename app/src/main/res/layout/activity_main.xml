@@ -47,21 +47,19 @@
                 android:layout_marginBottom="10dp"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_trasp_background">
+
 
                     <ImageButton
                         android:id="@+id/button_capture"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:background="@color/transparent"
+                        android:background="@drawable/button_trasp_background"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_camera_icon"
                         android:text="@string/dummy_button"
                         android:visibility="visible" />
-                </LinearLayout>
+
+
             </LinearLayout>
 
             <LinearLayout
@@ -75,21 +73,17 @@
                 app:layout_constraintStart_toEndOf="@+id/linearLayout5"
                 app:layout_constraintTop_toTopOf="@+id/linearLayout5">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:background="@drawable/button_trasp_background">
+
 
                     <ImageButton
                         android:id="@+id/button_end_session"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@color/transparent"
+                        android:background="@drawable/button_trasp_background"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_check"
                         android:text="@string/dummy_button" />
-                </LinearLayout>
+
             </LinearLayout>
 
 
@@ -109,20 +103,17 @@
                 tools:ignore="UselessParent">
 
 
-                <LinearLayout
-                    android:id="@+id/linearLayout4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+
 
                     <ImageButton
                         android:id="@+id/settings"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@color/transparent"
+                        android:background="@drawable/button_trasp_background"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_settings_black"
                         android:text="@string/dummy_button" />
-                </LinearLayout>
+
 
             </LinearLayout>
 
@@ -144,20 +135,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="UselessParent">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_trasp_background">
+
 
                     <ImageButton
                         android:id="@+id/gallery"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:background="@color/transparent"
+                        android:background="@drawable/button_trasp_background"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_gallery"
                         android:text="@string/dummy_button" />
-                </LinearLayout>
+
             </LinearLayout>
 
 

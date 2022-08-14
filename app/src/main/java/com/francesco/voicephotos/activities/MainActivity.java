@@ -149,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onClick(View v) {
                 openGallery();
+                finish();
             }
         });
         button_Settings = (ImageView) findViewById(R.id.settings);
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 Log.d(TAG, "onClick: sending multiple_shots.size()"+ multiple_photo_shots.size());
                 startActivity(intent);
                 finish();
+
             }
         });
     }
