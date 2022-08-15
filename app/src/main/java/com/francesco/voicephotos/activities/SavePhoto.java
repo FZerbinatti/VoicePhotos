@@ -90,7 +90,7 @@ public class SavePhoto extends AppCompatActivity {
 
         orientation = 0;
         Intent intent = getIntent();
-        final ArrayList<Photo> list_of_photos = (ArrayList<Photo>)intent.getSerializableExtra("LIST_OF_PHOTOS");
+        list_of_photos = (ArrayList<Photo>)intent.getSerializableExtra("LIST_OF_PHOTOS");
         Log.d(TAG, "onCreate: size arrived: "+list_of_photos.size());
         Bundle extras = getIntent().getExtras();
         int list_size =list_of_photos.size();
@@ -161,7 +161,25 @@ public class SavePhoto extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // quano si clicca salva deve prendere i campi e aggiungerli in sqlite , path photo, descrzione, geotag
-                    saveMultiplePhoto();
+                    for (int j=0; j<list_of_photos.size(); j++){
+
+                        photo_path = list_of_photos.get(j).getPhoto_path();
+                        photo_name = list_of_photos.get(j).getPhoto_name();
+                        photo_orientation = list_of_photos.get(j).getOrientation();
+                        orientation = Integer.parseInt(photo_orientation);
+
+
+                        Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
+                        mDatabaseHelper.addPhotoObject(photo);
+                    }
+
+
+
+                    Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                    Intent intent = new Intent(SavePhoto.this, MainActivity.class);
+                    startActivity(intent);
                 }
             });
         }
@@ -263,25 +281,7 @@ public class SavePhoto extends AppCompatActivity {
     }
 
     public void saveMultiplePhoto(){
-        for (int j=0; j<list_of_photos.size(); j++){
 
-            photo_path = list_of_photos.get(j).getPhoto_path();
-            photo_name = list_of_photos.get(j).getPhoto_name();
-            photo_orientation = list_of_photos.get(j).getOrientation();
-            orientation = Integer.parseInt(photo_orientation);
-
-
-            Photo photo = new Photo(photo_name, photo_path, editText_description.getText().toString(), orientation.toString());
-            mDatabaseHelper.addPhotoObject(photo);
-        }
-
-
-
-        Toast.makeText(getApplicationContext(), "Photo Saved", Toast.LENGTH_SHORT).show();
-        finish();
-
-        Intent intent = new Intent(SavePhoto.this, MainActivity.class);
-        startActivity(intent);
     }
 
     public void Voice2Text (){
