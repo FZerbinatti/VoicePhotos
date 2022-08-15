@@ -58,16 +58,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/secret_textview"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:textSize="18sp"
-                    android:gravity="center"
-                    android:layout_marginStart="40sp"
-                    android:layout_marginEnd="10dp"
-                    app:layout_constraintEnd_toEndOf="@+id/searchview"
-                    app:layout_constraintStart_toStartOf="@+id/searchview" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

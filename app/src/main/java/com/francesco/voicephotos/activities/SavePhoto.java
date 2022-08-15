@@ -13,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -111,6 +112,24 @@ public class SavePhoto extends AppCompatActivity {
             Log.d(TAG, "onCreate: PHOTO PATH: " + photo_path);
             Glide.with(getApplicationContext()).load(imgFile.getAbsolutePath()).apply(new RequestOptions().centerInside()).into(preview_immagine);
             preview_immagine.setRotation(orientation);
+
+            Log.d(TAG, "onCreate: SEE?");
+
+           /* editText_description.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+                @Override
+                public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                    Log.d(TAG, "onEditorAction: key: " +event.getKeyCode());
+                    Log.d(TAG, "onEditorAction: key: " + event.getAction() + " - " + event.getCharacters());
+                    if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                        // hide virtual keyboard
+                        Log.d(TAG, "onEditorAction: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                        return true;
+                    }
+                    return false;
+                }
+            });*/
+
 
 
             //salvataggio foto singola

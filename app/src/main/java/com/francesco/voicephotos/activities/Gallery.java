@@ -44,10 +44,9 @@ public class Gallery extends AppCompatActivity {
     List <Photo> photoList;
     private static final int REQUEST_CODE_SPEACH_INPUT = 1000;
     ImageButton button_microphone;
-    TextView secret_textview;
     SearchView searchview;
     Context context;
-
+    GridLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +59,7 @@ public class Gallery extends AppCompatActivity {
         photoList = mDatabaseHelper.getPhotos();
         Log.d(TAG, "onCreate: Photos list size:" + photoList.size());
         button_microphone = findViewById(R.id.button_microphone);
-        secret_textview = findViewById(R.id.secret_textview);
-        final GridLayoutManager mLayoutManager;
+
         mLayoutManager = new GridLayoutManager(getApplicationContext(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         context=this;
@@ -237,9 +235,61 @@ public class Gallery extends AppCompatActivity {
                 if (resultCode == RESULT_OK && data != null ) {
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
-                    //secret_textview.setText(result.get(0));
-                    //onQueryTextSubmit(result.get(0));
+                    photoList=mDatabaseHelper.searchPhoto(result.get(0));
 
+                    // -------------------------------- RICOMPILA TUTTA LA LISTA CON I NUOVI DATI --------------------
+
+                    final RecyclerViewClickListener listener = new RecyclerViewClickListener() {
+                        @Override
+                        public void onClick(View view, int position) {
+                            ArrayList<String> images_paths = new ArrayList<>();
+                            // open the Full screen image display
+                            Intent intent = new Intent(Gallery.this, FullScreenActivity.class);
+                            // passa solamente una lista dei path delle immagini
+                            for (int i=0; i<photoList.size(); i++){
+                                images_paths.add(photoList.get(i).getPhoto_path());
+                                Log.d(TAG, "onClick: path: "+photoList.get(i).getPhoto_path());
+                            }
+
+                            intent.putExtra("PHOTOS_PATHS", images_paths) ;
+                            Log.d(TAG, "onClick: position passed: "+position);
+                            intent.putExtra("PHOTO_POSITION", position);
+                            startActivity(intent);
+
+                        }
+                    };
+
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter( getApplicationContext(), photoList , listener                                                                                                                                                               );
+                    recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
+                    recyclerView.setAdapter(adapter);
+
+                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+
+                            firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+                            visibleItemCount = recyclerView.getChildCount();
+                            totalItemCount = mLayoutManager.getItemCount();
+
+
+                            Log.d(TAG, "onScrolled: firstVisibleItem"+firstVisibleItem);
+                            Log.d(TAG, "onScrolled: visibleItemCount"+visibleItemCount);
+                            Log.d(TAG, "onScrolled: totalItemCount" +totalItemCount);
+
+                            if (loading) {
+                                if (totalItemCount > previousTotal) {
+                                    loading = false;
+                                    previousTotal = totalItemCount;
+                                }
+                            }
+                            if (!loading && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
+
+                                loading = true;
+                            }
+                        }
+                    });
 
 
                 }
